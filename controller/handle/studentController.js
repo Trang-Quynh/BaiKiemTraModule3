@@ -22,6 +22,8 @@ class StudentController {
                              <button type="submit" class="btn btn-outline-dark">Delete</button>
                         </form>
                         </td>
+                        <td ><a type="button" class="btn btn-outline-secondary" href="/detail/${item.id}">Detail</a></td>
+                        <td >
                     </tr> 
             `
             no++;
@@ -33,7 +35,7 @@ class StudentController {
         if (req.method === 'GET') {
             fs.readFile('./view/home.html', 'utf-8', async (err, indexHtml) => {
                 let students = await studentService.findAll()
-
+                console.log(students)
                 indexHtml = this.getHtmlStudents(students, indexHtml)
                 res.write(indexHtml);
                 res.end()
@@ -45,7 +47,7 @@ class StudentController {
                 }
                 const data = Buffer.concat(buffers).toString();
                 const student = qs.parse(data);
-            console.log(student)
+
                 if(student.idDelete){
                     let id = student.idDelete
                     await studentService.deleteById(id)
@@ -79,7 +81,7 @@ class StudentController {
             req.on('data', (chunk) => {
                 data = data + chunk;
             })
-            console.log(data)
+
             req.on('end', async () => {
                 let editStudent = qs.parse(data);
                 await studentService.set(id,editStudent)
@@ -111,14 +113,29 @@ class StudentController {
             })
             req.on('end', () => {
                 let addStudent = qs.parse(data);
-                console.log(addStudent)
-                studentService.addStudentSql(addStudent)
                 studentService.addStudentSql(addStudent)
                 res.writeHead(301, {location: '/home'})
                 res.end();
             })
 
         }
+    }
+
+
+
+    showDetail = async (req,res,id) => {
+        fs.readFile('./view/information.html', 'utf-8', async (err, editHtml) => {
+            let student = await studentService.detail(id)
+
+            editHtml = editHtml.replace('{name}', student.name)
+            editHtml = editHtml.replace('{practical_grade}', student.practical_grade)
+            editHtml = editHtml.replace('{theory_grade}', student.theory_grade)
+            editHtml = editHtml.replace('{evaluate}', student.evaluate)
+            editHtml = editHtml.replace('{description}', student.description)
+            editHtml = editHtml.replace('{class}',  student.class_name)
+            res.write(editHtml);
+            res.end()
+        })
     }
 }
 module.exports = new StudentController

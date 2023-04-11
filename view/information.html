@@ -21,10 +21,9 @@
         </tr>
         <tr>
             <td> Danh gia: </td>
-            <td><select name="evaluate">
-                <option value="Dat">Dat</option>
-                <option value="Khong dat">Khong dat</option>
-            </select></td>
+            <td>
+                <input type="text" value="{evaluate}" name="evaluate" autocomplete="off">
+            </td>
         </tr>
         <tr>
             <td>  Description:</td>
@@ -33,15 +32,10 @@
         <tr>
             <td> Lop: </td>
             <td>
-                <select name="class_id">
-                    {class}
-                </select>
+                <input type="text" value="{class}" name="class_name" autocomplete="off">
             </td>
         </tr>
     </table>
-    <button type="submit">Submit</button>
 </form>
-
-
 </body>
 </html>

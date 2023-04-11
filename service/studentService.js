@@ -20,7 +20,7 @@ class StudentService {
 
     findAll = () =>{
         return new Promise((resolve, reject)=>{
-            this.connect.query('select student.*, class.class_name from student inner join class on student.id = class.class_id',(err,students)=>{
+            this.connect.query('select student.* from student ',(err,students)=>{
                 if(err){
                     reject(err)
                 }else{
@@ -63,5 +63,18 @@ class StudentService {
             })
         })
     }
+
+    detail = (id) =>{
+        return new Promise((resolve, reject)=>{
+            this.connect.query(`select student.*, class_name from student inner join class on student.class_id = class.class_id where student.id = '${id}'`,(err,students)=>{
+                if(err){
+                    reject(err)
+                }else{
+                    resolve(students[0])
+                }
+            })
+        })
+    }
+
 }
 module.exports = new StudentService()
